@@ -243,6 +243,16 @@ main{position:relative;z-index:10;max-width:760px;margin:0 auto;padding:86px 16p
 .big-line strong{color:var(--gold)}
 
 /* ---------- Modal ---------- */
+.splash{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:16px;
+  background:radial-gradient(ellipse at 50% 30%,rgba(35,64,122,.85),rgba(8,12,32,.94));backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  transition:opacity .7s,visibility .7s}
+.splash.hide{opacity:0;visibility:hidden;pointer-events:none}
+.splash-card{max-width:420px;width:100%;margin:0;text-align:center;animation:pop .7s cubic-bezier(.2,1.4,.4,1)}
+.splash-santa{font-size:84px;line-height:1;animation:bob 2s ease-in-out infinite;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45))}
+.splash-card h2{font-size:clamp(42px,11vw,60px)}
+.splash-card p{font-size:19px;margin-top:6px}
+.splash-go{margin-top:24px;font-size:21px;padding:16px 30px;animation:pulse 1.4s ease-in-out infinite}
+.splash-quiet{display:block;margin:16px auto 0;background:none;border:0;color:#d9dcf0;font:inherit;font-size:15px;text-decoration:underline;cursor:pointer;padding:6px}
 .modal{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(5,8,25,.7);backdrop-filter:blur(4px)}
 .modal.show{display:flex}
 .modal .card{max-width:440px;width:100%;margin:0;animation:pop .5s cubic-bezier(.2,1.4,.4,1);background:linear-gradient(160deg,rgba(31,138,76,.35),rgba(143,20,36,.4)),#141a33}
@@ -381,6 +391,17 @@ footer{position:relative;z-index:10;padding:30px 16px 0}
 
 <footer><div class="ginger"><span class="bow-top" aria-hidden="true">🎀</span><svg class="gm l" viewBox="0 0 60 70" aria-hidden="true"><g fill="#c46f2e" stroke="#6b3410" stroke-width="1.5" stroke-linejoin="round"><path d="M30 3a11 11 0 0 1 8 18.5h4c9 0 15 3 15 8s-5 5.5-9 4.5l-8-2v9l7 13c2 4 0 8-4 8-3 0-4.5-2-6-5l-7-11-7 11c-1.5 3-3 5-6 5-4 0-6-4-4-8l7-13v-9l-8 2c-4 1-9 .5-9-4.5s6-8 15-8h4A11 11 0 0 1 30 3z"/></g><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M25 17q5 4 10 0"/><path d="M6 28q2-2 4 0t4 0"/><path d="M46 28q2-2 4 0t4 0"/><path d="M13 62q2-2 4 0"/><path d="M43 62q2-2 4 0"/></g><circle cx="26" cy="11" r="1.8" fill="#fff"/><circle cx="34" cy="11" r="1.8" fill="#fff"/><circle cx="30" cy="30" r="2.4" fill="#d62839"/><circle cx="30" cy="37" r="2.4" fill="#1f8a4c"/><circle cx="30" cy="44" r="2.4" fill="#f5c542"/><path d="M24 22h12l-6 4z" fill="#d62839"/></svg><span class="txt">Mit ganz viel Liebe &amp; Lebkuchen für Mirco, Eva, Emma, Christian &amp; David <span class="heart">❤️</span></span><svg class="gm r" viewBox="0 0 60 70" aria-hidden="true"><g fill="#c46f2e" stroke="#6b3410" stroke-width="1.5" stroke-linejoin="round"><path d="M30 3a11 11 0 0 1 8 18.5h4c9 0 15 3 15 8s-5 5.5-9 4.5l-8-2v9l7 13c2 4 0 8-4 8-3 0-4.5-2-6-5l-7-11-7 11c-1.5 3-3 5-6 5-4 0-6-4-4-8l7-13v-9l-8 2c-4 1-9 .5-9-4.5s6-8 15-8h4A11 11 0 0 1 30 3z"/></g><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M25 17q5 4 10 0"/><path d="M6 28q2-2 4 0t4 0"/><path d="M46 28q2-2 4 0t4 0"/><path d="M13 62q2-2 4 0"/><path d="M43 62q2-2 4 0"/></g><circle cx="26" cy="11" r="1.8" fill="#fff"/><circle cx="34" cy="11" r="1.8" fill="#fff"/><circle cx="30" cy="30" r="2.4" fill="#d62839"/><circle cx="30" cy="37" r="2.4" fill="#1f8a4c"/><circle cx="30" cy="44" r="2.4" fill="#f5c542"/><path d="M24 22h12l-6 4z" fill="#d62839"/></svg></div></footer>
 
+<div class="splash" id="splash" role="dialog" aria-modal="true" aria-labelledby="sp-title">
+  <div class="card splash-card">
+    <span class="holly tl" aria-hidden="true">🎀</span><span class="holly tr" aria-hidden="true">🎀</span>
+    <div class="splash-santa" aria-hidden="true">🎅</div>
+    <h2 id="sp-title">Ho ho ho!</h2>
+    <p>Willkommen beim<br><strong>Familien-Wichteln 2026</strong>! 🎄</p>
+    <button class="btn green splash-go" id="splash-go">🔔 Tür auf &amp; Musik an!</button>
+    <button class="splash-quiet" id="splash-quiet">lieber ohne Musik</button>
+  </div>
+</div>
+
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
   <div class="card">
     <span class="santa" aria-hidden="true">🎅</span>
@@ -412,6 +433,8 @@ const DECOS = [
 ];
 const DRAW = {"salt":"b2cf53ded488","data":{"yyyjj1":"J0QC","1v5djkl":"IVoRD0ZHDQQK","dyx5qb":"L1sRBVo=","zp5p92":"JlMVD1E=","ysp02h":"J18OBw=="}};
 const STORE_KEY = "wichteln2026_gezogen";
+try { history.scrollRestoration = "manual"; } catch {}
+window.scrollTo(0, 0);
 
 /* ---------- Secret decoding ---------- */
 const hash = s => { let h = 5381; for (const c of s) h = ((h * 33) ^ c.charCodeAt(0)) >>> 0; return h.toString(36); };
@@ -723,7 +746,29 @@ function unlock(){
   ctx.resume().then(() => { $("music-hint").classList.add("hide"); });
   unlockedAt = performance.now();
 }
-["pointerdown","touchstart","keydown"].forEach(ev => addEventListener(ev, unlock, {capture: true, passive: true}));
+["pointerdown","pointerup","touchstart","touchend","click","keydown"].forEach(ev => addEventListener(ev, unlock, {capture: true, passive: true}));
+
+// Welcome screen: its button is the tap browsers need before sound may play
+function closeSplash(){
+  $("splash").classList.add("hide");
+  setTimeout(() => $("splash").remove(), 800);
+}
+$("splash-go").onclick = e => {
+  try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch {}
+  const c = audio(); c.resume();
+  unlockedAt = performance.now();
+  if (!playing) startMusic();
+  savePref("on");
+  fanfare();
+  burst(e.clientX, e.clientY, 40);
+  confetti(innerWidth / 2, innerHeight * .4);
+  closeSplash();
+  $("music-hint").textContent = "🔔 Hier Musik ausschalten";
+  $("music-hint").classList.remove("hide");
+  setTimeout(() => $("music-hint").classList.add("hide"), 7000);
+};
+$("splash-quiet").onclick = () => { stopMusic(); savePref("off"); closeSplash(); };
+$("splash-go").focus();
 
 $("music").onclick = () => {
   $("music-hint").classList.add("hide");
