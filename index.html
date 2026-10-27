@@ -690,14 +690,53 @@ function schedule(){
     if (idx === 0) nextT += BEAT * 2;
   }
 }
-$("music").onclick = () => {
-  $("music-hint").classList.add("hide");
-  if (playing) { playing = false; clearInterval(timer); $("music").classList.remove("on"); $("music").textContent = "🔔"; return; }
+// Music is on by default; the choice "off" is remembered per device.
+const MUSIC_KEY = "wichteln2026_musik";
+let unlockedAt = 0;
+function setBtn(on){
+  $("music").classList.toggle("on", on);
+  $("music").textContent = on ? "🎶" : "🔇";
+  $("music").setAttribute("aria-label", on ? "Weihnachtsmusik ausschalten" : "Weihnachtsmusik einschalten");
+}
+function startMusic(){
+  if (playing) return;
   const c = audio(); playing = true; idx = 0; beatCount = 0; nextT = c.currentTime + .1;
   timer = setInterval(schedule, 60); schedule();
-  $("music").classList.add("on"); $("music").textContent = "🎶";
+  setBtn(true);
+}
+function stopMusic(){
+  playing = false; clearInterval(timer); setBtn(false);
+}
+function savePref(v){ try { localStorage.setItem(MUSIC_KEY, v); } catch {} }
+function prefOn(){ try { return localStorage.getItem(MUSIC_KEY) !== "off"; } catch { return true; } }
+
+// Browsers only allow sound after the first tap/click/key – unlock it then.
+function unlock(){
+  if (!playing || !ctx || ctx.state === "running") return;
+  ctx.resume().then(() => { $("music-hint").classList.add("hide"); });
+  unlockedAt = performance.now();
+}
+["pointerdown","touchstart","keydown"].forEach(ev => addEventListener(ev, unlock, {capture: true, passive: true}));
+
+$("music").onclick = () => {
+  $("music-hint").classList.add("hide");
+  // The same tap that just unlocked the sound should not switch it off again
+  if (playing && performance.now() - unlockedAt < 1000) return;
+  if (playing) { stopMusic(); savePref("off"); }
+  else { startMusic(); savePref("on"); }
 };
-setTimeout(() => $("music-hint").classList.add("hide"), 9000);
+
+if (prefOn()) {
+  startMusic();
+  setTimeout(() => {
+    if (ctx && ctx.state !== "running") $("music-hint").textContent = "🎶 Tipp irgendwo für Musik!";
+    else $("music-hint").textContent = "🔔 Hier Musik ausschalten";
+  }, 300);
+} else {
+  setBtn(false);
+  $("music-hint").textContent = "Musik? 🎶";
+}
+setTimeout(() => $("music-hint").classList.add("hide"), 12000);
 
 renderOrnaments();
 })();
