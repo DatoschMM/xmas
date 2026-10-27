@@ -115,6 +115,11 @@ main{position:relative;z-index:10;max-width:760px;margin:0 auto;padding:86px 16p
   background:linear-gradient(135deg,#fff7e0,#f1dca3);color:#7a1020;font-weight:700;font-size:18px;
   border-radius:6px 14px 14px 6px;clip-path:polygon(14px 0,100% 0,100% 100%,14px 100%,0 50%);
   transform:rotate(-3deg);animation:tagswing 3s ease-in-out infinite;box-shadow:0 6px 14px rgba(0,0,0,.35)}
+.rule{display:flex;align-items:center;gap:12px;max-width:470px;margin:20px auto 0;padding:12px 16px;text-align:left;
+  background:linear-gradient(160deg,#b3172c,#7d0f1f);border:3px solid var(--gold);border-radius:16px;color:#fff;font-size:16px;line-height:1.4;
+  box-shadow:0 0 0 3px #fff,0 0 0 6px var(--green),0 8px 18px rgba(0,0,0,.4);text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.rule strong{color:#ffe27a}
+.rule-ico{font-size:30px;flex:0 0 auto;animation:bob 2.2s ease-in-out infinite}
 .tag::before{content:"";position:absolute;left:12px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:var(--night1)}
 @keyframes tagswing{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(3deg)}}
 
@@ -335,7 +340,8 @@ footer{position:relative;z-index:10;padding:30px 16px 0}
     <span class="holly tl" aria-hidden="true">🎀</span><span class="holly tr" aria-hidden="true">🎀</span>
     <h2>Ho ho ho! Wer bist du?</h2>
     <p>Tipp auf deine Christbaumkugel und finde heraus, wen <em>du</em> dieses Jahr heimlich beschenken darfst!</p>
-    <div class="tag">🎁 Budget: max. 25 €</div>
+    <div class="tag">🎁 Budget: max. 50 €</div>
+    <div class="rule"><span class="rule-ico" aria-hidden="true">🛍️</span><span><strong>Wichtel-Regel:</strong> Kein Online-Shopping! Das Geschenk muss im echten Laden vor Ort gekauft werden – im Einzelhandel. 🏪</span></div>
     <div class="ornaments" id="ornaments"></div>
     <p class="hint">🤫 Psst! Du kannst nur <strong>ein einziges Mal</strong> ziehen – also merk dir den Namen gut!</p>
   </section>
@@ -356,7 +362,8 @@ footer{position:relative;z-index:10;padding:30px 16px 0}
     <div class="tap" id="tap">👆 Tipp aufs Geschenk!</div>
     <div class="after" id="after" aria-live="polite">
       <p class="big-line">Du beschenkst dieses Jahr <strong id="recv-inline"></strong>! 🎉</p>
-      <div class="tag">🎁 Budget: max. 25 €</div>
+      <div class="tag">🎁 Budget: max. 50 €</div>
+    <div class="rule"><span class="rule-ico" aria-hidden="true">🛍️</span><span><strong>Wichtel-Regel:</strong> Kein Online-Shopping! Das Geschenk muss im echten Laden vor Ort gekauft werden – im Einzelhandel. 🏪</span></div>
       <p class="hint">Gut merken – nach dem Schließen ist der Name für immer im Schornstein verschwunden! 🔥</p>
       <div class="btn-row"><button class="btn green" id="done">🤐 Gemerkt – Geheimnis bewahren!</button></div>
     </div>
