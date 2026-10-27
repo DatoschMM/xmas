@@ -446,9 +446,34 @@ function receiverFor(giver){
   return new TextDecoder().decode(bytes);
 }
 
-/* ---------- Storage (per device) ---------- */
-function getUsed(){ try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch { return []; } }
-function markUsed(n){ try { const u = getUsed(); if (!u.includes(n)) u.push(n); localStorage.setItem(STORE_KEY, JSON.stringify(u)); } catch {} }
+/* ---------- Storage (this device + shared for everyone) ---------- */
+// Shared list of names that already drew (only who drew, never whom). Lives in a Make data store.
+const SYNC_URL = "https://hook.eu1.make.com/h36xdos4g2yu3h98buhjg1q59udivggd";
+let remoteUsed = [];
+function getLocal(){ try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch { return []; } }
+function getUsed(){ return [...new Set([...getLocal(), ...remoteUsed])]; }
+function parseNames(t){ return t.split(",").map(s => s.trim()).filter(n => NAMES.includes(n)); }
+async function syncRemote(name){
+  try {
+    const r = await fetch(SYNC_URL + (name ? "?name=" + encodeURIComponent(name) : ""), {cache: "no-store"});
+    if (r.ok) remoteUsed = [...new Set(parseNames(await r.text()))];
+  } catch {}
+  return remoteUsed;
+}
+function markUsed(n){
+  try { const u = getLocal(); if (!u.includes(n)) u.push(n); localStorage.setItem(STORE_KEY, JSON.stringify(u)); } catch {}
+  if (!remoteUsed.includes(n)) remoteUsed.push(n);
+  syncRemote(n);
+}
+let syncing = false;
+async function refreshUsed(){
+  if (syncing) return; syncing = true;
+  await syncRemote();
+  // Names drawn on this device before sharing existed get reported once.
+  for (const n of getLocal()) if (NAMES.includes(n) && !remoteUsed.includes(n)) await syncRemote(n);
+  syncing = false;
+  if ($("v-pick").classList.contains("active")) renderOrnaments();
+}
 
 /* ---------- Views ---------- */
 const $ = id => document.getElementById(id);
@@ -473,9 +498,11 @@ function renderOrnaments(){
     b.classList.add(d.cls);
     const glyphs = d.g.map(([ch, x, y, col, sz, tw]) => `<i class="g${tw ? " tw" : ""}" style="left:${x}%;top:${y}%;color:${col};font-size:${sz}px;animation-delay:${(-Math.random() * 1.6).toFixed(2)}s">${ch}</i>`).join("");
     b.innerHTML = `<span class="string"></span>${d.bow ? `<span class="capbow" aria-hidden="true">${d.bow}</span>` : ""}<span class="cap"></span><span class="ball">${glyphs}<span class="nm">${n}</span></span>`;
-    b.addEventListener("click", e => {
+    b.addEventListener("click", async e => {
       burst(e.clientX, e.clientY, 30);
       if (getUsed().includes(n)) { alreadyDone(n); return; }
+      await syncRemote();
+      if (getUsed().includes(n)) { renderOrnaments(); alreadyDone(n); return; }
       chosen = n;
       $("m-title").textContent = `Bist du wirklich ${n}?`;
       $("modal").classList.add("show");
@@ -791,6 +818,8 @@ if (prefOn()) {
 setTimeout(() => $("music-hint").classList.add("hide"), 12000);
 
 renderOrnaments();
+refreshUsed();
+document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshUsed(); });
 })();
 </script>
 </body>
